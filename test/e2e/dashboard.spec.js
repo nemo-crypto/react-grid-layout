@@ -2,6 +2,7 @@ const { test, expect } = require('@playwright/test');
 test('添加、保存、刷新、移除、重置与导入校验', async ({ page }) => {
   await page.goto('/');
   await expect(page.locator('.widget')).toHaveCount(6);
+  await expect(page.getByTestId('breakpoint-summary')).toContainText(test.info().project.name === 'mobile' ? 'xxs' : 'lg');
   await page.getByLabel('添加卡片').selectOption('note');
   await page.getByRole('button', { name: '＋ 添加' }).click();
   await expect(page.locator('.widget')).toHaveCount(7);

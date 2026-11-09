@@ -2,6 +2,9 @@
 ^0.172.0
 
 [ignore]
+<PROJECT_ROOT>/.yarn-cache/.*
+<PROJECT_ROOT>/demo-dist/.*
+<PROJECT_ROOT>/test-results/.*
 <PROJECT_ROOT>/build/.*
 <PROJECT_ROOT>/dist/.*
 <PROJECT_ROOT>/node_modules/resolve/.*

@@ -53,7 +53,7 @@ yarn dev
 | `test/e2e/` | 新增工作台行为验证 |
 | `test/spec/` | 原组件库单元/组件测试 |
 
-工作台没有修改组件库的公共 props 或排序、碰撞算法；原版英文 [README](README.md) 和 [LICENSE](LICENSE) 保留。
+保留组件库的公共 props 和排序、碰撞算法；另外修复了 WidthProvider 在占位节点被实际网格替换后未重新订阅尺寸的问题，避免卡片变成零宽度。原版英文 [README](README.md) 和 [LICENSE](LICENSE) 保留。
 
 ## 布局文件和恢复
 

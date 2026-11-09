@@ -1,11 +1,18 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import ReactDOM from 'react-dom';
 import { Responsive, WidthProvider } from 'react-grid-layout';
 import { COLS, BREAKPOINTS, TYPES, defaults, validate, load, save } from './state';
 import '../css/styles.css';
 import 'react-resizable/css/styles.css';
 import './style.css';
-const Grid = WidthProvider(Responsive);
+function MeasuredGrid(props) {
+  // Responsive 只在断点变化时回调；首屏挂载也要同步真实容器断点。
+  useEffect(() => {
+    props.onBreakpointChange(Responsive.utils.getBreakpointFromWidth(BREAKPOINTS, props.width));
+  }, [props.width, props.onBreakpointChange]);
+  return <Responsive {...props} />;
+}
+const Grid = WidthProvider(MeasuredGrid);
 function initialState() {
   try { return load(window.localStorage); } catch { return { data: defaults(), warning: '浏览器禁用了本地存储，仍可编辑和导出布局。' }; }
 }
@@ -48,7 +55,7 @@ function App() {
     });
   }
   return <main className="studio"><header><a href="/" className="brand"><span>▦</span> Grid Studio</a><span className="project">REACT GRID LAYOUT / LOCAL SOURCE</span></header>
-    <section className="hero"><div><div className="eyebrow">YOUR SPACE, YOUR STRUCTURE</div><h1>工作台，由你排列。</h1><p>可拖拽、可缩放、响应式。把布局变成可保存、可复用的配置。</p></div><div className="summary"><strong>{data.widgets.length}</strong><span>张卡片</span><i/><strong>{COLS[breakpoint]}</strong><span>列 · {breakpoint}</span></div></section>
+    <section className="hero"><div><div className="eyebrow">YOUR SPACE, YOUR STRUCTURE</div><h1>工作台，由你排列。</h1><p>可拖拽、可缩放、响应式。把布局变成可保存、可复用的配置。</p></div><div className="summary" data-testid="breakpoint-summary"><strong>{data.widgets.length}</strong><span>张卡片</span><i/><strong>{COLS[breakpoint]}</strong><span>列 · {breakpoint}</span></div></section>
     <section className="toolbar" aria-label="布局工具"><div><label htmlFor="widget-type">添加卡片</label><select id="widget-type" value={type} onChange={event => setType(event.target.value)}>{Object.entries(TYPES).map(([value, title]) => <option key={value} value={value}>{title}</option>)}</select><button onClick={add} disabled={locked || data.widgets.length >= 12}>＋ 添加</button></div><div><button aria-pressed={locked} onClick={() => setLocked(!locked)}>{locked ? '解锁布局' : '锁定布局'}</button><button disabled={locked} aria-pressed={compact} onClick={() => { setCompact(!compact); setDirty(true); }}>{compact ? '紧凑排列：开' : '紧凑排列：关'}</button><button onClick={() => { edit(defaults()); setNotice('已恢复默认布局；点击保存以覆盖已保存布局。'); }} disabled={locked}>重置</button><button className="primary" onClick={persist}>保存布局</button></div></section>
     <div className="status-row"><span role="status">{notice}</span><span>{dirty ? '有未保存更改' : '本地工作区'} · {locked ? '只读模式' : '编辑模式'}</span></div>
     <section className="canvas" aria-label="可编辑网格">
