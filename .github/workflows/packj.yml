@@ -4,7 +4,7 @@ name: Packj Security Audit
 on:
   pull_request:
     branches:
-      - master
+      - main
     paths:
       - "yarn.lock"
 

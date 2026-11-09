@@ -71,7 +71,7 @@ release-major: build lint test
 	@$(call release,major)
 
 publish:
-	git push --tags origin HEAD:master
+	git push --tags origin HEAD:main
 	npm publish
 
 define release
