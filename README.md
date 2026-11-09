@@ -21,6 +21,17 @@ RGL is React-only and does not require jQuery.
 
 [**[Demo](https://react-grid-layout.github.io/react-grid-layout/) | [Changelog](/CHANGELOG.md) | [CodeSandbox Editable demo](https://codesandbox.io/s/5wy3rz5z1x?module=%2Fsrc%2FShowcaseLayout.js)**]
 
+<!-- BEGIN project-discovery -->
+## 项目定位与实践入口
+
+Fork of React-Grid-Layout: draggable, resizable and responsive dashboard layouts for React. React 拖拽网格、可调整组件尺寸与响应式仪表盘布局，含中文开发指南。
+
+适合从以下入口阅读实现与接入条件：
+
+- [中文开发指南](README.zh-CN.md)
+- [原项目 API 与示例](README.md)
+<!-- END project-discovery -->
+
 ## Table of Contents
 
 - [Demos](#demos)
