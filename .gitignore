@@ -14,3 +14,8 @@ examples/*.js
 !examples/vars.js
 .vscode
 *.tgz
+
+.yarn-cache/
+playwright-report/
+test-results/
+demo-dist/
