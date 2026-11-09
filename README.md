@@ -2,6 +2,8 @@
 
 [中文本地开发指南](README.zh-CN.md) · 原项目API与说明保留如下。
 
+**新增 Grid Studio 工作台**：根目录运行 `yarn install --frozen-lockfile && yarn dev`，打开 http://127.0.0.1:4002。支持拖拽、缩放、响应式布局、本地保存和 JSON 导入导出；使用本仓库源码。Node 22.14+ / 24，Yarn 1.22.22。旧示例可用 `yarn dev:examples`。
+
 [![travis build](https://travis-ci.org/STRML/react-grid-layout.svg?branch=master)](https://travis-ci.org/STRML/react-grid-layout)
 [![CDNJS](https://img.shields.io/cdnjs/v/react-grid-layout.svg)](https://cdnjs.com/libraries/react-grid-layout)
 [![npm package](https://img.shields.io/npm/v/react-grid-layout.svg?style=flat-square)](https://www.npmjs.org/package/react-grid-layout)

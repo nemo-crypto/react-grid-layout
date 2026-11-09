@@ -1,45 +1,72 @@
-# React-Grid-Layout 本地源码指南
+# React-Grid-Layout：源码与布局工作台
 
-此目录为React-Grid-Layout组件源码与示例工程，提供可拖拽、可缩放、响应式网格布局。完整属性和原项目说明保留在 [英文README](README.md)，本页补充本地开发入口和当前工程边界。
+保留原组件库和全部 API，新增可直接操作的中文仪表盘工作台。工作台使用本仓库 `lib/` 源码，支持拖动、缩放、多断点布局、添加/移除、锁定、保存恢复和 JSON 导入导出。
 
-## 目录与模块
+## 开箱即用
 
-| 位置 | 职责 |
-|---|---|
-| `lib/ReactGridLayout.jsx` | 网格布局主体 |
-| `lib/ResponsiveReactGridLayout.jsx` | 响应式布局 |
-| `lib/GridItem.jsx` | 单项拖拽与尺寸交互 |
-| `lib/components/WidthProvider.jsx` | 容器宽度适配 |
-| `lib/utils.js`、`lib/calculateUtils.js` | 布局和坐标计算 |
-| `test/examples/` | 演示场景源码 |
-| `test/` | Jest及组件测试资源 |
-| `Makefile` | 开发、构建、检查与发布编排 |
-
-## 本地开发
-
-使用yarn.lock对应环境安装依赖，并准备make。工程源码使用Flow与JSX，示例开发依赖React 16；未声明统一Node engines，不应照新版本文档推断所有API与构建行为。
+需要 **Node.js 22.14+ 或 24 LTS、Yarn Classic 1.22.22**。依赖继续由原有 `yarn.lock` 管理，不混入 npm 锁文件。
 
 ```bash
 yarn install --frozen-lockfile
 yarn dev
 ```
 
-开发配置监听4002端口，打开 `http://localhost:4002/index-dev.html`。入口是test/dev-hook.jsx，开发别名指向本地index-dev.js，便于调试源码。
+打开 **http://127.0.0.1:4002**。没有后端或账号配置。开发脚本直接使用 Webpack，不要求先安装 Make。第一次安装时间取决于网络。
 
-## 构建与检查
+## 建议体验顺序
 
-```bash
-yarn test
-yarn lint
-yarn build
-```
+1. 拖动卡片顶部手柄移动位置；拖动右下角改变宽高。
+2. 使用顶部下拉菜单添加指标、图表、任务或便签，最多 12 张。
+3. 点击保存后刷新，验证布局恢复。
+4. 调整浏览器宽度，观察 `lg/md/sm/xs/xxs` 不同断点。
+5. 锁定后尝试操作，确认卡片不能拖动、缩放或移除。
+6. 导出 JSON，随后导入；非法版本、重复标识或越界尺寸会被拒绝。
 
-test通过Makefile运行Jest覆盖率；lint包含Flow和ESLint；build清理并生成build和dist。build-example/view-example还会生成示例资源，执行前确认目标目录为可重建产物。
+**数据说明**：收入、趋势与任务均是静态演示数据。保存内容是卡片集合及各断点布局，不是业务数据。锁定和紧凑排列开关属于当前会话设置。保存是显式操作，离开页面前点击「保存布局」。
 
-使用库时仍需按照英文README引入网格与可缩放样式，并为容器提供宽度。消费API以当前版本导出及props定义为准。
+## 命令一览
 
-## 贡献与验证
+| 命令 | 用途 |
+| --- | --- |
+| `yarn dev` | 新工作台开发服务，4002 端口 |
+| `yarn dev:examples` | 保留旧版示例入口 `/index-dev.html`，同样使用 4002 |
+| `yarn build:demo` | 构建工作台到 `demo-dist/` |
+| `yarn preview` | 预览工作台，http://127.0.0.1:4175 |
+| `yarn test:demo` | 布局导入、存储与校验的 Node 测试 |
+| `yarn setup:browsers` | 首次安装 Chromium |
+| `yarn test:e2e` | 自动构建预览，检查拖动、缩放、保存、导入等交互 |
+| `yarn test` | 原组件库 Jest 测试与覆盖率 |
+| `yarn build` | 原组件库 Babel + UMD 构建，跨平台 Node 编排 |
+| `yarn lint:js` | 原组件源码 ESLint |
 
-修改布局算法时应检查拖拽、缩放、断点、静态元素、碰撞和外部拖入等相关用例。保留原仓库 [LICENSE](LICENSE)、作者说明和发布约定。
+`yarn lint`、`build-example` 等原有高级流程仍保留 Makefile 入口；其工具依赖与普通工作台启动不同。开发服务与旧示例不要同时占用 4002。浏览器测试会占用 4175，先停止手动预览。
 
-本轮只核对package.json、Makefile、源码与开发配置，没有安装依赖、启动示例或重跑测试。原README徽章、线上演示与发布状态没有在本轮联网验证。
+## 目录
+
+| 位置 | 职责 |
+| --- | --- |
+| `demo/index.jsx` | 工作台界面和实际 Responsive Grid 交互 |
+| `demo/state.js` | 默认布局、版本化结构、校验和本地持久化 |
+| `webpack-dashboard.config.js` | 工作台开发/生产配置，别名指向本地源码 |
+| `lib/` | 原网格布局库、响应式计算、碰撞与尺寸算法 |
+| `test/examples/` | 原有的 22 组演示场景 |
+| `test/e2e/` | 新增工作台行为验证 |
+| `test/spec/` | 原组件库单元/组件测试 |
+
+工作台没有修改组件库的公共 props 或排序、碰撞算法；原版英文 [README](README.md) 和 [LICENSE](LICENSE) 保留。
+
+## 布局文件和恢复
+
+本地存储 key 为 `rgl-studio:v1`，结构包含 `version`、`widgets`、`layouts`。每个断点的布局必须完整对应卡片集合，尺寸与坐标必须是范围内整数。导入只保留已知字段，不执行任何脚本。
+
+损坏 JSON、存储权限异常时回退默认布局并提示。配额不足时明确提示保存失败，用户仍可导出 JSON。空布局合法，可从添加按钮重新创建。
+
+导入后的布局不会自动覆盖原存储；确认效果后点击保存。点击重置同样先改变内存，保存后才覆盖上次保存的配置。
+
+## 维护边界
+
+原库开发基线为 React 16 + Enzyme，工作台保持该基线，避免为了演示破坏原测试体系。为兼容 Enzyme 固定其 Cheerio 解析器版本；新增工作台不代表已升级整个组件库到最新 React 架构。
+
+浏览器测试包含桌面与手机尺寸的 Chromium 模拟；鼠标拖动/缩放在桌面测试，移动端检查布局与工具操作，不宣称真实设备触控验收。具体结果见 [本次验证记录](docs/validation.md)。
+
+布局配置为当前浏览器本地数据，不做云同步或多人编辑。默认开发服务只监听本机。
