@@ -61,28 +61,45 @@ export default function WidthProvideRGL<Config>(
     mounted: boolean = false;
     resizeObserver: ResizeObserver;
 
+    observedElement: ?HTMLElement = null;
+
     componentDidMount() {
       this.mounted = true;
       this.resizeObserver = new ResizeObserver(entries => {
         const node = this.elementRef.current;
-        if (node instanceof HTMLElement) {
-          const width = entries[0].contentRect.width;
-          this.setState({ width });
+        const entry = entries.find(item => item.target === node);
+        // 初始占位节点会被真正网格替换，忽略旧节点和临时隐藏的零宽通知。
+        if (this.mounted && entry && entry.contentRect.width > 0) {
+          const width = entry.contentRect.width;
+          if (width !== this.state.width) this.setState({ width });
         }
       });
+      this.observeCurrentElement();
+    }
+
+    componentDidUpdate() {
+      this.observeCurrentElement();
+    }
+
+    observeCurrentElement() {
       const node = this.elementRef.current;
-      if (node instanceof HTMLElement) {
-        this.resizeObserver.observe(node);
+      if (node === this.observedElement) return;
+      if (this.observedElement) {
+        this.resizeObserver.unobserve(this.observedElement);
+      }
+      this.observedElement = node instanceof HTMLElement ? node : null;
+      if (this.observedElement) {
+        this.resizeObserver.observe(this.observedElement);
       }
     }
 
     componentWillUnmount() {
       this.mounted = false;
-      const node = this.elementRef.current;
-      if (node instanceof HTMLElement) {
-        this.resizeObserver.unobserve(node);
+      if (this.observedElement) {
+        this.resizeObserver.unobserve(this.observedElement);
       }
       this.resizeObserver.disconnect();
+      this.observedElement = null;
     }
 
     render() {
